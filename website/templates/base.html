@@ -15,6 +15,12 @@
       crossorigin="anonymous"
     />
     <title>{% block title %}Home{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bs/css/united.min.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="..static/styles.css">
+
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -88,5 +94,8 @@
     src="{{ url_for('static', filename='index.js')}}">
 
     </script>
+    <script src="{{ url_for('static', filename='bs/js/jquery.min.js') }}"></script>
+		<!-- Bootstrap JavaScript -->
+		<script src="{{ url_for('static', filename='bs/js/bootstrap.min.js') }}"></script>
 </body>
 </html>

@@ -1,5 +1,108 @@
-{% extends "base.html" %} {% block title %}Changed{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>This is the home page</h1>
+<div class="container-fluid" id="wrapper">
+
+    <div class="row" id="homeJumbo">
+        <div class="overlay"></div>
+        <div class="col-lg-12">
+            <h1>
+                <a href="#">FOOD TRACKER</a>
+            </h1>
+            
+            <div class="row t20">
+                <div class="col-lg-4 col-lg-offset-4">
+                    <ul class="nav nav-pills nav-justified">
+                        <li role="presentation" class="active" style="margin-right: 100px;">
+                            <a href="#" title="Home">Home</a>
+                        </li>
+                        <li role="presentation" class="active" style="margin-left: 150px;">
+                            <a href="#" title="Add Food Item" class="no-wrap">Add Food Item</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row t20">
+        <div class="col-lg-4 col-lg-offset-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form action="#" method="POST" role="form">
+                        <div class="form-group">
+                            <label><i class="glyphicon glyphicon-plus-sign"></i> Add New Date</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" name="date" placeholder="Select New Date" aria-label="date" aria-describedby="add-btn">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary" id="add-btn">
+                                        <i class="glyphicon glyphicon-plus-sign"></i> Add Date
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="row t20">
+        <div class="col-lg-12">
+            <h4 class="text-center text-white"><strong>Existing Records (4)</strong></h4>
+        </div>
+    </div>
+
+    <div class="row t20">
+
+        <div class="col-lg-3">
+            <div class="panel panel-warning">
+                <div class="panel-body text-bold">
+                    <i class="glyphicon glyphicon-calendar"></i> January 01, 2024
+
+                    <a class="btn btn-primary btn-xs pull-right" href="#">
+                        View <i class="glyphicon glyphicon-arrow-right"></i>
+                    </a>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item text-bold"><span class="badge">100g</span> Protein</li>
+                    <li class="list-group-item text-bold"><span class="badge">200g</span> Carbohydrate</li>
+                    <li class="list-group-item text-bold"><span class="badge">50g</span> Fat</li>
+                    <li class="list-group-item text-bold"><span class="badge">1500</span> Calories</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-warning">
+                <div class="panel-body text-bold">
+                    <i class="glyphicon glyphicon-calendar"></i> January 02, 2024
+
+                    <a class="btn btn-primary btn-xs pull-right" href="#">
+                        View <i class="glyphicon glyphicon-arrow-right"></i>
+                    </a>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item text-bold"><span class="badge">120g</span> Protein</li>
+                    <li class="list-group-item text-bold"><span class="badge">180g</span> Carbohydrate</li>
+                    <li class="list-group-item text-bold"><span class="badge">40g</span> Fat</li>
+                    <li class="list-group-item text-bold"><span class="badge">1400</span> Calories</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Additional sample records -->
+    </div>
+
+</div>
+
+<footer>
+    <div class="row pad">
+        <div class="col-lg-12 text-center">
+            Copyright &copy; 2024 <strong>Food Tracker</strong>
+        </div>
+    </div>
+</footer>
 {% endblock %}
+
