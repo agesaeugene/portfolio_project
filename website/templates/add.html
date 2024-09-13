@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="container-fluid" id="wrapper">
-
     <div class="row" id="homeJumbo">
         <div class="overlay"></div>
         <div class="col-lg-12">
@@ -16,10 +15,10 @@
                 <div class="col-lg-4 col-lg-offset-4">
                     <ul class="nav nav-pills nav-justified">
                         <li role="presentation" class="active">
-                            <a href="#" title="Home">Home</a>
+                            <a href="{{ url_for('views.home') }}" title="Home">Home</a>
                         </li>
                         <li role="presentation" class="ml-auto active" >
-                            <a href="#" title="Add Food Item" class="no-wrap">Add Food Item</a>
+                            <a href="{{ url_for('views.add') }}" title="Add Food Item" class="no-wrap">Add Food Item</a>
                         </li>
                     </ul>
                 </div>
@@ -35,24 +34,24 @@
                         <i class="glyphicon glyphicon-plus-sign"></i> New Food Form
                     </h3>
                     <hr />
-                    <form action="#" method="POST" role="form">
+                    <form action="{{ url_for('views.add') }}" method="POST" role="form">
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label for="food-name">Food Name</label>
-                                    <input type="text" class="form-control" id="food-name" placeholder="Food Name" autofocus>
+                                    <input type="text" class="form-control" id="food-name" name="food-name" placeholder="Food Name" value="{{ food.name }}" autofocus>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label for="protein">Protein</label>
-                                    <input type="number" class="form-control" id="protein" placeholder="Protein">
+                                    <input type="number" class="form-control" id="protein" name="protein" placeholder="Protein" value="{{ food.proteins }}">
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label for="carbohydrates">Carbohydrates</label>
-                                    <input type="number" class="form-control" id="carbohydrates" placeholder="Carbohydrates">
+                                    <input type="number" class="form-control" id="carbohydrates" name="carbohydrates" placeholder="Carbohydrates" value="{{ food.carbs }}">
                                 </div>
                             </div>
                         </div>
@@ -61,12 +60,13 @@
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label for="fat">Fat</label>
-                                    <input type="number" class="form-control" id="fat" placeholder="Fat">
+                                    <input type="number" class="form-control" id="fat" name="fat"placeholder="Fat" value="{{ food.fats }}">
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label style="visibility:hidden">submit</label>
+                                    <input type="hidden" name="food-id" value="{{ food.id }}">  
                                     <button type="submit" class="btn btn-primary btn-block">
                                         <i class="glyphicon glyphicon-upload"></i> Submit
                                     </button>
@@ -97,33 +97,24 @@
                                 <th style="width: 16%;">Carbohydrates</th>
                                 <th style="width: 10%;">Fat</th>
                                 <th style="width: 12%;">Calories</th>
+                                <th style="width: 12%;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for food in foods %}
                             <tr>
-                                <td>1</td>
-                                <td>Chicken Breast</td>
-                                <td>30g</td>
-                                <td>0g</td>
-                                <td>3g</td>
-                                <td>165</td>
+                                <td>{{ food.id }}</td><td>{{ food.name }}</td><td>{{ food.proteins }}</td>
+                                <td>{{ food.carbs }}</td><td>{{ food.fats }}</td><td>{{ food.calories }}</td>
+                                <td>
+                                    <a href="{{ url_for('views.edit_food', food_id=food.id) }}" class="btn btn-default btn-xs">
+                                        <i class="glyphicon glyphicon-pencil"></i> Edit
+                                    </a>
+                                    <a href="{{ url_for('views.delete_food', food_id=food.id) }}" class="btn btn-danger btn-xs">
+                                        <i class="glyphicon glyphicon-trash"></i> Delete
+                                    </a>
+                                </td>                                
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Broccoli</td>
-                                <td>3g</td>
-                                <td>6g</td>
-                                <td>0g</td>
-                                <td>55</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Rice</td>
-                                <td>4g</td>
-                                <td>45g</td>
-                                <td>1g</td>
-                                <td>205</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

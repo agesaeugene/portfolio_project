@@ -1,9 +1,7 @@
 body {
 	background: rgba(0, 0, 0, .4);
 	font-family: 'Ubuntu', sans-serif;
-}
-
-#wrapper {
+	margin: 0;
 }
 
 #homeJumbo {
@@ -125,3 +123,4 @@ footer {
 .no-wrap {
     white-space: nowrap; 
 }
+

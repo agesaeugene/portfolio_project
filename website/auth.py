@@ -40,26 +40,31 @@ def sign_up():
         password2 = request.form.get('password2')
 
         user = User.query.filter_by(email=email).first()
+
         if user:
             flash('Email already exists.', category='error')
-
-        if len(email) < 4:
+        elif len(email) < 4:
             flash('Email must be greater than 3 characters.', category='error')
-        elif len(first_name) < 3:
-            flash('First name must be greater than 1 characters.', category='error')
+        elif len(first_name) < 2:  # Changed this to check for correct length
+            flash('First name must be greater than 1 character.', category='error')
         elif password1 != password2:
             flash('Passwords don\'t match.', category='error')
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
+            # Create a new user
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1, method='pbkdf2:sha256'))
 
+            # Add to the database
             db.session.add(new_user)
             db.session.commit()
-            login_user(user, remember=True)
+
+            # Log the newly created user in
+            login_user(new_user, remember=True)
+
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html", user=current_user)
-    
+
 

@@ -19,8 +19,6 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="..static/styles.css">
-
-
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -39,12 +37,13 @@
               <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
               {% else %}
               <a class="nav-item nav-link" id="login" href="/login">Login</a>
-              <a class="nav-item nav-link" id="signUp" href="/sign-up">sign Up</a>
+              <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
               {% endif %}
             </div>
         </div>
     </nav>
 
+    <!-- Existing flash messages block -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -67,12 +66,22 @@
     {% endif %}
     {% endwith %}
 
+    <!-- New flash messages block -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="alert alert-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
     <div class="container">
         {% block content %}
         {% endblock %}
     </div>
     
-
     <script
     src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
