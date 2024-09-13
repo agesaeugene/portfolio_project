@@ -10,7 +10,7 @@ views = Blueprint('views', __name__)
 @views.route('/')
 @login_required
 def home():
-    logs = Log.query.order_by(Log.date.desc()).all()
+    logs = Log.query.filter_by(user_id=current_user.id).order_by(Log.date.desc()).all()
 
     log_dates = []
         
@@ -39,9 +39,10 @@ def home():
 
 
 @views.route('/create_log', methods=['POST'])
+@login_required
 def create_log():
     date = request.form.get('date')
-    log = Log(date=datetime.strptime(date, '%Y-%m-%d'))
+    log = Log(date=datetime.strptime(date, '%Y-%m-%d'), user_id=current_user.id)
     db.session.add(log)
     db.session.commit()
     return redirect(url_for('views.view', log_id=log.id))
@@ -119,8 +120,9 @@ def edit_food(food_id):
     return render_template('add.html', food=food, foods=foods)
 
 @views.route('/view/<int:log_id>')
+@login_required
 def view(log_id):
-    log = Log.query.get_or_404(log_id)
+    log = Log.query.filter_by(id=log_id, user_id=current_user.id).first_or_404()
     foods = Food.query.all()
 
     totals = {

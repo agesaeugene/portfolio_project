@@ -32,5 +32,9 @@ class Food(db.Model):
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
-    
+
+    # Adding a foreign key to link logs to users
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('logs', lazy=True))
+
     foods = db.relationship('Food', secondary=log_food, lazy='dynamic')
