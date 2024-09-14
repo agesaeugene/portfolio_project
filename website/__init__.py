@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
@@ -9,7 +10,7 @@ DB_NAME = "database.db"
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'sjhbkhdf jknjdnjkb'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
@@ -39,3 +40,5 @@ def create_database(app):
         with app.app_context():
             db.create_all()
         print('Created Database!')
+
+# postgresql://food_tracker_db_8l5e_user:vq6LNxTtXEhTcwQqGAWNKG6HcGRQfPJq@dpg-crig0l68ii6s73f34l00-a.oregon-postgres.render.com/food_tracker_db_8l5e
