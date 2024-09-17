@@ -30,4 +30,4 @@ Calorie Counter App: A comprehensive solution for tracking calories and macronut
 Meal Planner App: Helps users plan meals for the week based on their nutritional goals. [Link to project]
 
 LICNSING
-This project is licensed under the MIT License. See the [LICENSE](link to license file) file for more information.
+To the extent possible under law, Matias Singers has waived all copyright and related or neighboring rights to this work.

@@ -1,3 +1,4 @@
+
     // Add a listener for the form submission
     document.getElementById('date-form').addEventListener('submit', function(event) {
         var dateInput = document.getElementById('date-input').value;
