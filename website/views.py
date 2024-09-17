@@ -8,6 +8,13 @@ from datetime import datetime
 views = Blueprint('views', __name__)
 
 @views.route('/')
+def landing():
+    if current_user.is_authenticated:
+        return redirect(url_for('views.home'))
+    
+    return render_template("land.html")
+
+@views.route('/home')
 @login_required
 def home():
     logs = Log.query.filter_by(user_id=current_user.id).order_by(Log.date.desc()).all()
@@ -42,10 +49,23 @@ def home():
 @login_required
 def create_log():
     date = request.form.get('date')
-    log = Log(date=datetime.strptime(date, '%Y-%m-%d'), user_id=current_user.id)
-    db.session.add(log)
-    db.session.commit()
-    return redirect(url_for('views.view', log_id=log.id))
+
+    # Check if the date is empty
+    if not date:
+        flash('Please select a date!', 'error')
+        return redirect(url_for('views.add_date'))  # Redirect back to the form
+
+    try:
+        # Attempt to parse the date
+        log = Log(date=datetime.strptime(date, '%Y-%m-%d'), user_id=current_user.id)
+        db.session.add(log)
+        db.session.commit()
+        flash('Log created successfully!', 'success')
+        return redirect(url_for('views.view', log_id=log.id))
+    except ValueError:
+        # Catch any parsing errors and inform the user
+        flash('Invalid date format. Please select a valid date.', 'error')
+        return redirect(url_for('views.add_date'))
 
 @views.route('/add')
 def add():

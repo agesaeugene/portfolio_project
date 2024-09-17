@@ -31,11 +31,11 @@
         <div class="col-lg-4 col-lg-offset-4">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <form action="{{ url_for('views.create_log') }}" method="POST" role="form">
+                    <form action="{{ url_for('views.create_log') }}" method="POST" role="form" id="date-form">
                         <div class="form-group">
                             <label><i class="glyphicon glyphicon-plus-sign"></i> Add New Date</label>
                             <div class="input-group">
-                                <input type="date" class="form-control" name="date" placeholder="Select New Date" aria-label="date" aria-describedby="add-btn">
+                                <input type="date" class="form-control" name="date" id="date-input" placeholder="Select New Date" aria-label="date" aria-describedby="add-btn">
                                 <span class="input-group-btn">
                                     <button type="submit" class="btn btn-primary" id="add-btn">
                                         <i class="glyphicon glyphicon-plus-sign"></i> Add Date
@@ -43,7 +43,7 @@
                                 </span>
                             </div>
                         </div>
-                    </form> 
+                    </form>                    
                 </div>
             </div>
         </div>
