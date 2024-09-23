@@ -4,16 +4,20 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 from .extensions import db
+from flask_migrate import Migrate
 
 DB_NAME = "database.db"
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'sjhbkhdf jknjdnjkb'
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", f'sqlite:///database.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.init_app(app)
+    
+    db.init_app(app)  # Initialize the app with the database
 
+    # Initialize Flask-Migrate
+    migrate = Migrate(app, db)
 
     from .views import views
     from .auth import auth
