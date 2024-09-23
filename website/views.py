@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, make_response
 from flask_login import login_required, current_user
 from website.models import Food, Log
 from .extensions import db
 from sqlalchemy.exc import IntegrityError  
 from datetime import datetime
+from weasyprint import HTML
+import os
 
 views = Blueprint('views', __name__)
 
@@ -68,57 +70,53 @@ def create_log():
         return redirect(url_for('views.add_date'))
 
 @views.route('/add')
+@login_required
 def add():
-    foods = Food.query.all()
+    foods = Food.query.filter_by(user_id=current_user.id).all()
     return render_template("add.html", foods=foods, food=None)
 
 @views.route('/add', methods=['POST'])
+@login_required
 def add_post():
-    food_id = request.form.get('food-id')  # Checks if we're editing an existing food item
+    food_id = request.form.get('food-id')
     food_name = request.form.get('food-name')
     proteins = request.form.get('protein')
     carbs = request.form.get('carbohydrates')
     fats = request.form.get('fat')
 
-    # If we're adding a new food (not updating)
     if food_id:
-        # Skip "already exists" check for current food being updated
+        # Editing an existing food
         food = Food.query.get_or_404(food_id)
-        if food.name != food_name:
-            # Only check for existing food if the name is being changed
-            existing_food = Food.query.filter_by(name=food_name).first()
-            if existing_food:
-                flash('This food item already exists!', 'warning')
-                return redirect(url_for('views.add'))
+        if food.user_id != current_user.id:
+            flash("You don't have permission to edit this food item.", 'danger')
+            return redirect(url_for('views.add'))
 
-        # Update existing food item
         food.name = food_name
         food.proteins = proteins
         food.carbs = carbs
         food.fats = fats
     else:
-        # Adding a new food item
-        existing_food = Food.query.filter_by(name=food_name).first()
+        # Adding a new food
+        existing_food = Food.query.filter_by(name=food_name, user_id=current_user.id).first()
         if existing_food:
-            flash('This food item already exists!', 'warning')
+            flash('You have already added this food item!', 'warning')
             return redirect(url_for('views.add'))
-        
-        # Create a new food entry if it doesn't already exist
+
         new_food = Food(
             name=food_name,
             proteins=proteins,
             carbs=carbs,
-            fats=fats
+            fats=fats,
+            user_id=current_user.id  # Save the current user's ID
         )
         db.session.add(new_food)
-    
-    # Commit changes to the database
+
     try:
         db.session.commit()
-        flash('Food item updated successfully!', 'success')
+        flash('Food item added & updated successfully!', 'success')
     except IntegrityError:
         db.session.rollback()
-        flash('An error occurred while saving the food item. Please try again.', 'danger')
+        flash('An error occurred while saving the food item.', 'danger')
 
     return redirect(url_for('views.add'))
 
@@ -134,17 +132,22 @@ def delete_food(food_id):
     return redirect(url_for('views.add'))
 
 @views.route('/edit_food/<int:food_id>')
+@login_required
 def edit_food(food_id):
-    food = Food.query.get_or_404(food_id)
-    foods = Food.query.all()
+    food = Food.query.filter_by(id=food_id, user_id=current_user.id).first_or_404()
+    
+    # Fetch only the foods added by the current user
+    foods = Food.query.filter_by(user_id=current_user.id).all()
     return render_template('add.html', food=food, foods=foods)
 
 @views.route('/view/<int:log_id>')
 @login_required
 def view(log_id):
+    # Fetching the log and filtering the food added by the currect user
     log = Log.query.filter_by(id=log_id, user_id=current_user.id).first_or_404()
-    foods = Food.query.all()
+    foods = Food.query.filter_by(user_id=current_user.id).all()
 
+    # Calculating the totals for proteins, carbs, fats, and calories
     totals = {
         'proteins' : 0,
         'carbs' : 0,
@@ -152,23 +155,26 @@ def view(log_id):
         'calories' : 0
     }
 
+    # Update totals based on the foods in the log
     for food in log.foods:
         totals['proteins'] += food.proteins
         totals['carbs'] += food.carbs
         totals['fat']  += food.fats
         totals['calories'] += food.calories
 
+    # Render the view template with only the current user's foods
     return render_template("view.html", foods=foods, log=log, totals=totals)
 
-
-
 @views.route('/add_food_to_log/<int:log_id>', methods=['POST'])
+@login_required
 def add_food_to_log(log_id):
     log = Log.query.get_or_404(log_id)
     selected_food = request.form.get('food-select')
     food = Food.query.get(int(selected_food))
-    log.foods.append(food)
-    db.session.commit()
+    if food and log:
+        log.foods.append(food)
+        db.session.commit()
+    return redirect(url_for('views.view', log_id=log_id))
 
     return redirect(url_for('views.view', log_id=log_id))
 
@@ -179,3 +185,50 @@ def remove_food_from_log(log_id, food_id):
     log.foods.remove(food)
     db.session.commit()
     return redirect(url_for('views.view', log_id=log_id))
+
+@views.route('/download_summary')
+@login_required
+def download_summary():
+    # Fetch all logs for the current user
+    logs = Log.query.filter_by(user_id=current_user.id).order_by(Log.date.desc()).all()
+
+    # Prepare a summary of nutrients for the month
+    log_summaries = []
+    total_proteins = total_carbs = total_fat = total_calories = 0
+
+    for log in logs:
+        log_proteins = log_carbs = log_fat = log_calories = 0
+
+        for food in log.foods:
+            log_proteins += food.proteins
+            log_carbs += food.carbs
+            log_fat += food.fats
+            log_calories += food.calories
+
+        log_summaries.append({
+            'date': log.date.strftime('%B %d, %Y'),
+            'proteins': log_proteins,
+            'carbs': log_carbs,
+            'fat': log_fat,
+            'calories': log_calories,
+        })
+
+        total_proteins += log_proteins
+        total_carbs += log_carbs
+        total_fat += log_fat
+        total_calories += log_calories
+
+    # Render the PDF-friendly HTML template
+    html = render_template('monthly_summary_pdf.html', logs=log_summaries, 
+                           total_proteins=total_proteins, total_carbs=total_carbs, 
+                           total_fat=total_fat, total_calories=total_calories)
+
+    # Convert the HTML to PDF
+    pdf = HTML(string=html).write_pdf()
+
+    # Generate a downloadable response
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=monthly_summary.pdf'
+
+    return response

@@ -25,6 +25,11 @@ class Food(db.Model):
     carbs = db.Column(db.Integer, nullable=False)
     fats = db.Column(db.Integer, nullable=False)
 
+    # Link food items to users
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='foods', lazy=True)
+
+
     @property
     def calories(self):
         return self.proteins * 4 + self.carbs * 4 + self.fats * 9 

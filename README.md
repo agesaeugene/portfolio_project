@@ -31,3 +31,10 @@ Meal Planner App: Helps users plan meals for the week based on their nutritional
 
 LICNSING
 To the extent possible under law, Matias Singers has waived all copyright and related or neighboring rights to this work.
+
+![alt text](<Screenshot from 2024-09-18 22-21-09.png>)
+
+The idea for the food tracker app was born out of a personal need for better dietary management. A few years ago, I found myself constantly struggling to keep track of my meals, not knowing whether I was eating too much or too little of certain foods. Like many others, I was juggling a busy schedule, making it hard to monitor my diet consistently. I tried using existing apps, but most were either too complicated or didn’t offer the customization I needed. 
+That’s when I realized there was a gap for an app that made food tracking simple, personalized, and effective. I wanted something that would allow users to log their meals quickly, without a lot of unnecessary features getting in the way, while also providing an option to view progress over time. This led me to develop the food tracker app—not just for myself, but for anyone who wants to take control of their diet without the hassle. With the rise of fitness and wellness trends, I knew it could help others who were also looking for an easier way to maintain healthy eating habits. 
+The app became a passion project, where I focused on building a smooth, user-friendly experience backed by solid functionality to meet the everyday needs of people with busy lifestyles.
+The food tracker app successfully allows users to log, track, and manage their daily food intake, offering a simple interface and personalized experience. Users can add food entries, view previous logs, and track their progress over time. The app ensures each user has a unique profile with secure login credentials, storing their data independently to provide a tailored experience every time they access the app.

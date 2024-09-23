@@ -5,7 +5,6 @@ from os import path
 from flask_login import LoginManager
 from .extensions import db
 
-DB_FOLDER = "instance"
 DB_NAME = "database.db"
 
 def create_app():

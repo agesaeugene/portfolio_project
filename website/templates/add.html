@@ -103,8 +103,12 @@
                         <tbody>
                             {% for food in foods %}
                             <tr>
-                                <td>{{ food.id }}</td><td>{{ food.name }}</td><td>{{ food.proteins }}</td>
-                                <td>{{ food.carbs }}</td><td>{{ food.fats }}</td><td>{{ food.calories }}</td>
+                                <td>{{ food.id }}</td>
+                                <td>{{ food.name }}</td>
+                                <td>{{ food.proteins }}</td>
+                                <td>{{ food.carbs }}</td>
+                                <td>{{ food.fats }}</td>
+                                <td>{{ food.calories }}</td>
                                 <td>
                                     <a href="{{ url_for('views.edit_food', food_id=food.id) }}" class="btn btn-default btn-xs">
                                         <i class="glyphicon glyphicon-pencil"></i> Edit
@@ -112,7 +116,7 @@
                                     <a href="{{ url_for('views.delete_food', food_id=food.id) }}" class="btn btn-danger btn-xs">
                                         <i class="glyphicon glyphicon-trash"></i> Delete
                                     </a>
-                                </td>                                
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
